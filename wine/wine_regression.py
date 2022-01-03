@@ -112,13 +112,13 @@ Strong Overfitting.
 """
 for criterion in ['squared_error', 'absolute_error']:
     model = DecisionTreeRegressor(criterion=criterion,
-                                   splitter='best',
-                                   max_depth=None,
-                                   min_samples_split=0.01,
-                                   max_features=None,
-                                   random_state=None,
-                                   min_impurity_decrease=0.00,
-                                  )
+                                  splitter='best',
+                                  max_depth=None,
+                                  min_samples_split=0.01,
+                                  max_features=None,
+                                  random_state=None,
+                                  min_impurity_decrease=0.00,
+                                 )
     model.fit(X_train, y_train)
     print(f'Entscheidungsbaum Regression (criterion={criterion})')
     print(f'R2 Trainingsdaten: {model.score(X_train, y_train)}')
