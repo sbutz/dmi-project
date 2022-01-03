@@ -5,8 +5,8 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 
-df_red = pd.read_csv('winequality-red.csv', sep=';')
-df_white = pd.read_csv('winequality-white.csv', sep=';')
+df_red = pd.read_csv('./wine/winequality-red.csv', sep=';', header=0)
+df_white = pd.read_csv('./wine/winequality-white.csv', sep=';', header=0)
 
 df_red['colour'] = 0
 df_white['colour'] = 1

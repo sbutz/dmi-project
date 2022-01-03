@@ -10,10 +10,7 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeClassifier
 
-df = pd.read_csv('winequality-red.csv',
-    sep=';',
-    header=0,
-    )
+df = pd.read_csv('./wine/winequality-red.csv', sep=';', header=0)
 
 x_columns = ["fixed acidity", "volatile acidity", "citric acid", "residual sugar", "chlorides", "free sulfur dioxide",
              "total sulfur dioxide", "density", "pH", "sulphates", "alcohol"]
