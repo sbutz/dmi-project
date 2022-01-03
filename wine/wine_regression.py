@@ -94,7 +94,9 @@ print(f'R2 Testdaten: {model.score(X_test, y_test)}')
 print('\n')
 
 
-""" Support Vector Regression """
+""" Support Vector Regression
+No promising results.
+"""
 for kernel in ['rbf', 'linear', 'poly']:
     model = SVR(kernel=kernel, degree=3, max_iter=-1)
     model.fit(X_train, y_train.values.ravel())
@@ -105,7 +107,9 @@ for kernel in ['rbf', 'linear', 'poly']:
     print('\n')
 
 
-""" Descision Tree Regression """
+""" Descision Tree Regression
+Best regression results R2=0.55
+"""
 for criterion in ['entropy', 'gini']:
     model = DecisionTreeClassifier(criterion=criterion,
                                    splitter='best',
