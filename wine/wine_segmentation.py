@@ -2,6 +2,7 @@
 
 """TODO
 - test other models:
+    - nearest neighbour
     - furthest neighbour
     - average neighbour
     - non-Hierachical Clustering
@@ -9,6 +10,7 @@
     - svm
     - naive bayes
     - neuronale netze
+- verify if clustering is because of color or quality
 """
 
 from sklearn.cluster import KMeans
