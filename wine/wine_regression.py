@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression, BayesianRidge
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.svm import SVR
-from sklearn.tree import DecisionTreeClassifier, export_graphviz
+from sklearn.tree import DecisionTreeRegressor, export_graphviz
 import graphviz as gv
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -108,16 +108,16 @@ for kernel in ['rbf', 'linear', 'poly']:
 
 
 """ Descision Tree Regression
-Best regression results R2=0.55
+Strong Overfitting.
 """
-for criterion in ['entropy', 'gini']:
-    model = DecisionTreeClassifier(criterion=criterion,
+for criterion in ['squared_error', 'absolute_error']:
+    model = DecisionTreeRegressor(criterion=criterion,
                                    splitter='best',
                                    max_depth=None,
-                                   min_samples_split=0.05,
+                                   min_samples_split=0.01,
                                    max_features=None,
                                    random_state=None,
-                                   min_impurity_decrease=0.01,
+                                   min_impurity_decrease=0.00,
                                   )
     model.fit(X_train, y_train)
     print(f'Entscheidungsbaum Regression (criterion={criterion})')
