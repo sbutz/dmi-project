@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
 
+"""TODO
+- test other models:
+    - furthest neighbour
+    - average neighbour
+    - non-Hierachical Clustering
+    - Hierachical Clustering (teilendes, agglomeratives)
+    - svm
+    - naive bayes
+    - neuronale netze
+"""
+
 from sklearn.cluster import KMeans
 import numpy as np
 import pandas as pd
@@ -28,4 +39,4 @@ accuracy_white = np.mean(df_white['color'].values == model.predict(df_white.iloc
 print('KMeans Segmentierung:')
 print(f'Genauigkeit: {accuracy:.2f}')
 print(f'Genauigkeit (rot): {accuracy_red:.2f}')
-print(f'Genauigkeit (weiß): {accuracy_white:.2f}')
+print(f'Genauigkeit (weiß): {accuracy_white:.2f}')
