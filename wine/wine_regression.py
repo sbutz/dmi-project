@@ -21,7 +21,8 @@ import pandas as pd
 - use scaler?
 """
 
-df = pd.read_csv('./wine/winequality-red.csv', sep=';', header=0)
+df_red = pd.read_csv('winequality-red.csv', sep=';', header=0)
+df_white = pd.read_csv('winequality-white.csv', sep=';', header=0)
 
 x_columns = ["fixed acidity", "volatile acidity", "citric acid", "residual sugar", "chlorides", "free sulfur dioxide",
              "total sulfur dioxide", "density", "pH", "sulphates", "alcohol"]
@@ -31,27 +32,25 @@ x_columns_2 = ["volatile acidity", "residual sugar", "chlorides",
 
 y_column = ["quality"]
 
-print(df)
+print(df_red)
 
 """ Scatter matrix """
-scatter_matrix(df[x_columns + y_column],
+scatter_matrix(df_red[x_columns + y_column],
                figsize=(15, 15),
                marker='o',
-               c=df['quality'].values,
+               c=df_red['quality'].values,
                s=30,
                alpha=0.8,
-)
+               )
 plt.show()
 
-
 """ Split Datset """
-X = df[x_columns]
-y = df[y_column]
+X = df_red[x_columns]
+y = df_red[y_column]
 X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                     test_size=0.3,
                                                     random_state=2,
-                                                   )
-
+                                                    )
 
 """ Linear Regression
 No promising results.
@@ -64,12 +63,11 @@ print(f'R2 Trainingsdaten: {model.score(X_train, y_train)}')
 print(f'R2 Testdaten: {model.score(X_test, y_test)}')
 print('\n')
 
-
 """ Polynomial Regression
 No promising results.
 Overfitting starting with degree 3.
 """
-for degree in [2,3]:
+for degree in [2, 3]:
     poly = PolynomialFeatures(degree=degree)
     X_train_p = poly.fit_transform(X_train)
     X_test_p = poly.fit_transform(X_test)
@@ -81,7 +79,6 @@ for degree in [2,3]:
     print(f'Polynomial: R2 Testdaten: {model.score(X_test_p, y_test)}')
     print('\n')
 
-
 """ Bayesian Ridge Regression
 No promising results.
 """
@@ -92,7 +89,6 @@ print('Bayes\'sche lineare Regression:')
 print(f'R2 Trainingsdaten: {model.score(X_train, y_train)}')
 print(f'R2 Testdaten: {model.score(X_test, y_test)}')
 print('\n')
-
 
 """ Support Vector Regression
 No promising results.
@@ -106,7 +102,6 @@ for kernel in ['rbf', 'linear', 'poly']:
     print(f'Polynomial: R2 Testdaten: {model.score(X_test, y_test)}')
     print('\n')
 
-
 """ Descision Tree Regression
 Strong Overfitting.
 """
@@ -118,7 +113,7 @@ for criterion in ['squared_error', 'absolute_error']:
                                   max_features=None,
                                   random_state=None,
                                   min_impurity_decrease=0.00,
-                                 )
+                                  )
     model.fit(X_train, y_train)
     print(f'Entscheidungsbaum Regression (criterion={criterion})')
     print(f'R2 Trainingsdaten: {model.score(X_train, y_train)}')
@@ -126,10 +121,6 @@ for criterion in ['squared_error', 'absolute_error']:
     print('\n')
 
 # Only plot last/best tree
-dot = export_graphviz(model, out_file=None,filled=True, feature_names=X.columns)
+dot = export_graphviz(model, out_file=None, filled=True, feature_names=X.columns)
 graph = gv.Source(dot)
 graph.view()
-
-
-""" KNN """
-# TODO
