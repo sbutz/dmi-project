@@ -2,7 +2,6 @@
 
 """TODO
 - test other models:
-    - nearest neighbour
     - furthest neighbour
     - average neighbour
     - non-Hierachical Clustering
@@ -17,8 +16,10 @@ from sklearn.cluster import KMeans
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import MinMaxScaler
+import numpy as np
 
 df_red = pd.read_csv('winequality-red.csv', sep=';', header=0)
 df_white = pd.read_csv('winequality-white.csv', sep=';', header=0)
@@ -50,6 +51,29 @@ print(f'Genauigkeit: {accuracy:.2f}')
 print(f'Genauigkeit (rot): {accuracy_red:.2f}')
 print(f'Genauigkeit (weiß): {accuracy_white:.2f}')
 
+"""" Naive Bayes (Gauss)
+Bad accuracy"""
+X = df[x_columns]
+y = df[y_column]
+
+random_state = 12
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                    test_size=0.3,
+                                                    random_state=random_state,
+                                                    )
+model = GaussianNB()
+model.fit(X_train, np.ravel(y_train))
+y_predict = model.predict(X_test)
+result_NB = pd.DataFrame(y_predict, columns=['predicted value'])
+result_NB['original value'] = df.quality
+
+accuracy = np.mean(result_NB.iloc[:, 1] == result_NB.iloc[:, 0])
+
+print("\nPrediction of Quality with Naive Bayes(Gauss)")
+print(result_NB)
+print(f'Accuracy: {accuracy:.2f}')
+
+
 """" KNeighborsClassifier 
 Using MinMaxScaler.
 Without splitting into categories.
@@ -78,8 +102,6 @@ print('Accuracy of K-NN classifier on test set: {:.2f}'
 print(knn.predict(X_test_scaled))
 print(y_test)
 
-# TODO: combine both wine datasets and try KNN again
-
 """ KNN 
 Splitting wines into different quality ranges.
 Good results.
@@ -102,12 +124,16 @@ berechnung = KMeans(n_clusters=3)
 berechnung.fit(df[x_columns])
 
 labels = berechnung.labels_
+accuracy = np.mean(df['quality'].values == labels)
 
+print("\nPrediction of Quality with KMeans and 3 clusters")
 result = pd.DataFrame(labels, columns=['predicted value'])
 result['original value'] = df.quality
 
 print(result)
+print(f'Accuracy: {accuracy:.2f}')
 
+"""KNeighborsClassifier """
 X = df[x_columns]
 y = df[y_column]
 X_train, X_test, y_train, y_test = train_test_split(X, y,
@@ -123,7 +149,7 @@ X_test = scaler.transform(X_test)
 knc = KNeighborsClassifier(n_neighbors=5, algorithm='auto', metric='minkowski', p=2)
 
 knc.fit(X_train, y_train.values.ravel())
-print("KNN on both on red and white wine split into 3 categories(0-5/6-7/8-9):")
+print("\nKNN on both on red and white wine split into 3 categories(0-5/6-7/8-9):")
 print('Accuracy of K-NN classifier on training set: {:.2f}'
       .format(knc.score(X_train, y_train.values.ravel())))
 print('Accuracy of K-NN classifier on test set: {:.2f}'
@@ -134,4 +160,4 @@ print(y_test)
 
 # TODO: Add KNN with 2 categories
 # TODO: Try with only 1 of the datasets?
-# TODO: Clean up and get rid of redundancy: outsource in methhods?
+# TODO: Clean up and get rid of redundancy: outsource in methods?
