@@ -39,68 +39,85 @@ Segments ~80% of elements correctly.
 Predicts red wine better.
 Possible Explanation: Far more red wines in dataset.
 """
-model = KMeans(n_clusters=2)
-model.fit(df.iloc[:, :-1])  # exclude color (last) column
 
-accuracy = np.mean(df['color'].values == model.labels_)
-accuracy_red = np.mean(df_red['color'].values == model.predict(df_red.iloc[:, :-1]))
-accuracy_white = np.mean(df_white['color'].values == model.predict(df_white.iloc[:, :-1]))
 
-print('KMeans Segmentierung:')
-print(f'Genauigkeit: {accuracy:.2f}')
-print(f'Genauigkeit (rot): {accuracy_red:.2f}')
-print(f'Genauigkeit (weiß): {accuracy_white:.2f}')
+def kmeans_color(df, df_red, df_white):
+    model = KMeans(n_clusters=2)
+    model.fit(df.iloc[:, :-1])  # exclude color (last) column
+
+    accuracy = np.mean(df['color'].values == model.labels_)
+    accuracy_red = np.mean(df_red['color'].values == model.predict(df_red.iloc[:, :-1]))
+    accuracy_white = np.mean(df_white['color'].values == model.predict(df_white.iloc[:, :-1]))
+
+    print('KMeans Segmentierung:')
+    print(f'Genauigkeit: {accuracy:.2f}')
+    print(f'Genauigkeit (rot): {accuracy_red:.2f}')
+    print(f'Genauigkeit (weiß): {accuracy_white:.2f}')
+
+
+kmeans_color(df, df_red, df_white)
 
 """" Naive Bayes (Gauss)
 Bad accuracy"""
-X = df[x_columns]
-y = df[y_column]
 
-random_state = 12
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.3,
-                                                    random_state=random_state,
-                                                    )
-model = GaussianNB()
-model.fit(X_train, np.ravel(y_train))
-y_predict = model.predict(X_test)
-result_NB = pd.DataFrame(y_predict, columns=['predicted value'])
-result_NB['original value'] = df.quality
 
-accuracy = np.mean(result_NB.iloc[:, 1] == result_NB.iloc[:, 0])
+def naive_bayes(df, x_columns, y_column):
+    X = df[x_columns]
+    y = df[y_column]
 
-print("\nPrediction of Quality with Naive Bayes(Gauss)")
-print(result_NB)
-print(f'Accuracy: {accuracy:.2f}')
+    random_state = 12
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                        test_size=0.3,
+                                                        random_state=random_state,
+                                                        )
+    model = GaussianNB()
+    model.fit(X_train, np.ravel(y_train))
+    y_predict = model.predict(X_test)
+    result_NB = pd.DataFrame(y_predict, columns=['predicted value'])
+    result_NB['original value'] = df.quality
 
+    accuracy = np.mean(result_NB.iloc[:, 1] == result_NB.iloc[:, 0])
+
+    print("\nPrediction of Quality with Naive Bayes(Gauss)")
+    print(result_NB)
+    print(f'Accuracy: {accuracy:.2f}')
+
+
+naive_bayes(df, x_columns, y_column)
 
 """" KNeighborsClassifier 
 Using MinMaxScaler.
 Without splitting into categories.
 """
 
-X = df[x_columns]
-y = df[y_column]
 
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.3,
-                                                    # random_state=2,
-                                                    )
+def knn(df, x_columns, y_column):
+    X = df[x_columns]
+    y = df[y_column]
 
-scaler = MinMaxScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                        test_size=0.3,
+                                                        # random_state=2,
+                                                        )
 
-knn = KNeighborsClassifier()
-knn.fit(X_train_scaled, y_train.values.ravel())
-print("\nKNN on both on red and white wine:")
-print('Accuracy of K-NN classifier on training set: {:.2f}'
-      .format(knn.score(X_train_scaled, y_train.values.ravel())))
-print('Accuracy of K-NN classifier on test set: {:.2f}'
-      .format(knn.score(X_test_scaled, y_test.values.ravel())))
+    scaler = MinMaxScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
 
-print(knn.predict(X_test_scaled))
-print(y_test)
+    knn = KNeighborsClassifier()
+    knn.fit(X_train_scaled, y_train.values.ravel())
+    print("\nKNN on both on red and white wine:")
+    print('Accuracy of K-NN classifier on training set: {:.2f}'
+          .format(knn.score(X_train_scaled, y_train.values.ravel())))
+    print('Accuracy of K-NN classifier on test set: {:.2f}'
+          .format(knn.score(X_test_scaled, y_test.values.ravel())))
+
+    print(knn.predict(X_test_scaled))
+    print(y_test)
+
+
+knn(df, x_columns, y_column)
+
 
 """ KNN 
 Splitting wines into different quality ranges.
@@ -118,45 +135,56 @@ print(df)
 
 """Prediction with KMeans and 3 clusters"""
 
-# TODO: Add representation for result
 
-berechnung = KMeans(n_clusters=3)
-berechnung.fit(df[x_columns])
+def kmeans_quality(df):
+    # TODO: Add representation for result
 
-labels = berechnung.labels_
-accuracy = np.mean(df['quality'].values == labels)
+    berechnung = KMeans(n_clusters=3)
+    berechnung.fit(df[x_columns])
 
-print("\nPrediction of Quality with KMeans and 3 clusters")
-result = pd.DataFrame(labels, columns=['predicted value'])
-result['original value'] = df.quality
+    labels = berechnung.labels_
+    accuracy = np.mean(df['quality'].values == labels)
 
-print(result)
-print(f'Accuracy: {accuracy:.2f}')
+    print("\nPrediction of Quality with KMeans and 3 clusters")
+    result = pd.DataFrame(labels, columns=['predicted value'])
+    result['original value'] = df.quality
+
+    print(result)
+    print(f'Accuracy: {accuracy:.2f}')
+
+
 
 """KNeighborsClassifier """
-X = df[x_columns]
-y = df[y_column]
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.3,
-                                                    # random_state=2,
-                                                    )
 
-# KNN
-scaler = MinMaxScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
 
-knc = KNeighborsClassifier(n_neighbors=5, algorithm='auto', metric='minkowski', p=2)
+def knn_categories(df, x_columns, y_column):
+    X = df[x_columns]
+    y = df[y_column]
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                        test_size=0.3,
+                                                        # random_state=2,
+                                                        )
 
-knc.fit(X_train, y_train.values.ravel())
-print("\nKNN on both on red and white wine split into 3 categories(0-5/6-7/8-9):")
-print('Accuracy of K-NN classifier on training set: {:.2f}'
-      .format(knc.score(X_train, y_train.values.ravel())))
-print('Accuracy of K-NN classifier on test set: {:.2f}'
-      .format(knc.score(X_test, y_test.values.ravel())))
+    # KNN
+    scaler = MinMaxScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_test = scaler.transform(X_test)
 
-print(knc.predict(X_test))
-print(y_test)
+    knc = KNeighborsClassifier(n_neighbors=5, algorithm='auto', metric='minkowski', p=2)
+
+    knc.fit(X_train, y_train.values.ravel())
+    print("\nKNN on both on red and white wine split into 3 categories(0-5/6-7/8-9):")
+    print('Accuracy of K-NN classifier on training set: {:.2f}'
+          .format(knc.score(X_train, y_train.values.ravel())))
+    print('Accuracy of K-NN classifier on test set: {:.2f}'
+          .format(knc.score(X_test, y_test.values.ravel())))
+
+    print(knc.predict(X_test))
+    print(y_test)
+
+
+kmeans_quality(df)
+knn_categories(df, x_columns, y_column)
 
 # TODO: Add KNN with 2 categories
 # TODO: Try with only 1 of the datasets?
