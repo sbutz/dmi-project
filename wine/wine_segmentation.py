@@ -13,7 +13,6 @@
 """
 
 from sklearn.cluster import KMeans
-import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
@@ -73,13 +72,13 @@ Without splitting into categories.
 """
 
 
-def knn(df, x_columns, y_column):
+def knn(df, x_columns, y_column, random_state):
     X = df[x_columns]
     y = df[y_column]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                         test_size=0.3,
-                                                        # random_state=2,
+                                                        random_state=random_state,
                                                         )
 
     scaler = MinMaxScaler()
@@ -176,7 +175,7 @@ def main():
 
     naive_bayes(df, x_columns, y_column, random_state)
 
-    knn(df, x_columns, y_column)
+    knn(df, x_columns, y_column, random_state)
 
     df.loc[df.quality < 6, "quality"] = 0
     df.loc[df.quality >= 6, "quality"] = 2
@@ -193,4 +192,3 @@ if __name__ == "__main__":
 
 # TODO: Add KNN with 2 categories
 # TODO: Try with only 1 of the datasets?
-# TODO: Clean up and get rid of redundancy: outsource in methods?
