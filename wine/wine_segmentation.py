@@ -7,7 +7,6 @@
     - non-Hierachical Clustering
     - Hierachical Clustering (teilendes, agglomeratives)
     - svm
-    - naive bayes
     - neuronale netze
 - verify if clustering is because of color or quality
 """
@@ -104,6 +103,10 @@ def knn(df, x_columns, y_column, random_state):
 
 def kmeans_quality(df, x_columns):
     # TODO: Add representation for result
+    df = df.copy(deep=True)
+    df.loc[df.quality < 6, "quality"] = 0
+    df.loc[df.quality >= 6, "quality"] = 1
+    df.loc[df.quality >= 8, "quality"] = 2
 
     berechnung = KMeans(n_clusters=3)
     berechnung.fit(df[x_columns])
@@ -128,7 +131,21 @@ brings very good results as well.
 """
 
 
-def knn_categories(df, x_columns, y_column, random_state):
+def knn_categories(df, x_columns, y_column, random_state, state):
+    df = df.copy(deep=True)
+
+    if state == 2:
+        df.loc[df.quality < 7, "quality"] = 0
+        df.loc[df.quality >= 7, "quality"] = 1
+        print("\nKNN on both on red and white wine split into 2 categories(0-6/7-9):")
+    elif state == 3:
+        df.loc[df.quality < 6, "quality"] = 0
+        df.loc[df.quality >= 6, "quality"] = 1
+        df.loc[df.quality >= 8, "quality"] = 2
+        print("\nKNN on both on red and white wine split into 3 categories(0-5/6-7/8-9):")
+    else:
+        print("Invalid state")
+
     X = df[x_columns]
     y = df[y_column]
     X_train, X_test, y_train, y_test = train_test_split(X, y,
@@ -144,7 +161,6 @@ def knn_categories(df, x_columns, y_column, random_state):
     knc = KNeighborsClassifier(n_neighbors=5, algorithm='auto', metric='minkowski', p=2)
 
     knc.fit(X_train, y_train.values.ravel())
-    print("\nKNN on both on red and white wine split into 3 categories(0-5/6-7/8-9):")
     print('Accuracy of K-NN classifier on training set: {:.2f}'
           .format(knc.score(X_train, y_train.values.ravel())))
     print('Accuracy of K-NN classifier on test set: {:.2f}'
@@ -177,14 +193,11 @@ def main():
 
     knn(df, x_columns, y_column, random_state)
 
-    df.loc[df.quality < 6, "quality"] = 0
-    df.loc[df.quality >= 6, "quality"] = 2
-    df.loc[df.quality >= 8, "quality"] = 3
-
     print(df)
 
     kmeans_quality(df, x_columns)
-    knn_categories(df, x_columns, y_column, random_state)
+    knn_categories(df, x_columns, y_column, random_state, 2)
+    knn_categories(df, x_columns, y_column, random_state, 3)
 
 
 if __name__ == "__main__":
