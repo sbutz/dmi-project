@@ -130,7 +130,12 @@ def decision_tree(X_train, y_train, X_test, y_test, x_columns):
 
 def main():
     df_red = pd.read_csv('winequality-red.csv', sep=';', header=0)
+    df_red.name = "dataframe with data of red wine"
     df_white = pd.read_csv('winequality-white.csv', sep=';', header=0)
+    df_white.name = "dataframe with data of white wine"
+
+    df = df_red.append(df_white, ignore_index=True)
+    df.name = "dataframe with data of red and white wine combined"
 
     x_columns = ["fixed acidity", "volatile acidity", "citric acid", "residual sugar", "chlorides",
                  "free sulfur dioxide",
@@ -143,24 +148,25 @@ def main():
 
     random_state = 2
 
-    # print(df_red)
+    for df in [df_red, df_white, df]:
+        if input("Do You Want To Continue? [y/n]") == "y":
+            print("\nAnalyzing", df.name, "...", "\n")
+            scatter(df, x_columns, y_column)
+            # scatter(df_white, x_columns, y_column)
 
-    scatter(df_red, x_columns, y_column)
-    # scatter(df_white, x_columns, y_column)
+            """ Split Datset """
+            X = df[x_columns]
+            y = df[y_column]
+            X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                                test_size=0.3,
+                                                                random_state=random_state,
+                                                                )
 
-    """ Split Datset """
-    X = df_red[x_columns]
-    y = df_red[y_column]
-    X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                        test_size=0.3,
-                                                        random_state=random_state,
-                                                        )
-
-    linear(X_train, y_train, X_test, y_test)
-    polynomial(X_train, y_train, X_test, y_test)
-    bayesian(X_train, y_train, X_test, y_test)
-    svm(X_train, y_train, X_test, y_test)
-    decision_tree(X_train, y_train, X_test, y_test, x_columns)
+            linear(X_train, y_train, X_test, y_test)
+            polynomial(X_train, y_train, X_test, y_test)
+            bayesian(X_train, y_train, X_test, y_test)
+            svm(X_train, y_train, X_test, y_test)
+            decision_tree(X_train, y_train, X_test, y_test, x_columns)
 
 
 if __name__ == "__main__":

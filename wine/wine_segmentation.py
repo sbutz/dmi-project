@@ -203,5 +203,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-# TODO: Add KNN with 2 categories
 # TODO: Try with only 1 of the datasets?
