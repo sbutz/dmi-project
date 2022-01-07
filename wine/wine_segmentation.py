@@ -21,19 +21,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 
-df_red = pd.read_csv('winequality-red.csv', sep=';', header=0)
-df_white = pd.read_csv('winequality-white.csv', sep=';', header=0)
-
-df_red['color'] = 0
-df_white['color'] = 1
-
-df = df_red.append(df_white, ignore_index=True)
-
-x_columns = ["fixed acidity", "volatile acidity", "citric acid", "residual sugar", "chlorides", "free sulfur dioxide",
-             "total sulfur dioxide", "density", "pH", "sulphates", "alcohol"]
-
-y_column = ["quality"]
-
 """ KMeans Clustering
 Segments ~80% of elements correctly.
 Predicts red wine better.
@@ -55,17 +42,14 @@ def kmeans_color(df, df_red, df_white):
     print(f'Genauigkeit (weiß): {accuracy_white:.2f}')
 
 
-kmeans_color(df, df_red, df_white)
-
 """" Naive Bayes (Gauss)
 Bad accuracy"""
 
 
-def naive_bayes(df, x_columns, y_column):
+def naive_bayes(df, x_columns, y_column, random_state):
     X = df[x_columns]
     y = df[y_column]
 
-    random_state = 12
     X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                         test_size=0.3,
                                                         random_state=random_state,
@@ -82,8 +66,6 @@ def naive_bayes(df, x_columns, y_column):
     print(result_NB)
     print(f'Accuracy: {accuracy:.2f}')
 
-
-naive_bayes(df, x_columns, y_column)
 
 """" KNeighborsClassifier 
 Using MinMaxScaler.
@@ -116,27 +98,12 @@ def knn(df, x_columns, y_column):
     print(y_test)
 
 
-knn(df, x_columns, y_column)
+"""KMeans
+ Quality prediction with 3 clusters
+ """
 
 
-""" KNN 
-Splitting wines into different quality ranges.
-Good results.
-Most wines are in the range of ~4-7
-Splitting into 3 categories but splitting into 2 categories (e.g. 1-7 | 8-9)
-brings very good results as well.
-"""
-
-df.loc[df.quality < 6, "quality"] = 0
-df.loc[df.quality >= 6, "quality"] = 2
-df.loc[df.quality >= 8, "quality"] = 3
-
-print(df)
-
-"""Prediction with KMeans and 3 clusters"""
-
-
-def kmeans_quality(df):
+def kmeans_quality(df, x_columns):
     # TODO: Add representation for result
 
     berechnung = KMeans(n_clusters=3)
@@ -153,16 +120,21 @@ def kmeans_quality(df):
     print(f'Accuracy: {accuracy:.2f}')
 
 
+""" KNN 
+Splitting wines into different quality ranges.
+Good results.
+Most wines are in the range of ~4-7
+Splitting into 3 categories but splitting into 2 categories (e.g. 1-7 | 8-9)
+brings very good results as well.
+"""
 
-"""KNeighborsClassifier """
 
-
-def knn_categories(df, x_columns, y_column):
+def knn_categories(df, x_columns, y_column, random_state):
     X = df[x_columns]
     y = df[y_column]
     X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                         test_size=0.3,
-                                                        # random_state=2,
+                                                        random_state=random_state,
                                                         )
 
     # KNN
@@ -183,8 +155,41 @@ def knn_categories(df, x_columns, y_column):
     print(y_test)
 
 
-kmeans_quality(df)
-knn_categories(df, x_columns, y_column)
+def main():
+    df_red = pd.read_csv('winequality-red.csv', sep=';', header=0)
+    df_white = pd.read_csv('winequality-white.csv', sep=';', header=0)
+
+    df_red['color'] = 0
+    df_white['color'] = 1
+
+    df = df_red.append(df_white, ignore_index=True)
+
+    x_columns = ["fixed acidity", "volatile acidity", "citric acid", "residual sugar", "chlorides",
+                 "free sulfur dioxide",
+                 "total sulfur dioxide", "density", "pH", "sulphates", "alcohol"]
+
+    y_column = ["quality"]
+
+    random_state = 12
+
+    kmeans_color(df, df_red, df_white)
+
+    naive_bayes(df, x_columns, y_column, random_state)
+
+    knn(df, x_columns, y_column)
+
+    df.loc[df.quality < 6, "quality"] = 0
+    df.loc[df.quality >= 6, "quality"] = 2
+    df.loc[df.quality >= 8, "quality"] = 3
+
+    print(df)
+
+    kmeans_quality(df, x_columns)
+    knn_categories(df, x_columns, y_column, random_state)
+
+
+if __name__ == "__main__":
+    main()
 
 # TODO: Add KNN with 2 categories
 # TODO: Try with only 1 of the datasets?
