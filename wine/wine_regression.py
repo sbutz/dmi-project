@@ -149,24 +149,26 @@ def main():
     random_state = 2
 
     for df in [df_red, df_white, df]:
-        if input("Do You Want To Continue? [y/n]") == "y":
-            print("\nAnalyzing", df.name, "...", "\n")
-            scatter(df, x_columns, y_column)
-            # scatter(df_white, x_columns, y_column)
+        print("\nAnalyzing", df.name, "...", "\n")
+        scatter(df, x_columns, y_column)
+        # scatter(df_white, x_columns, y_column)
 
-            """ Split Datset """
-            X = df[x_columns]
-            y = df[y_column]
-            X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                                test_size=0.3,
-                                                                random_state=random_state,
-                                                                )
+        """ Split Datset """
+        X = df[x_columns]
+        y = df[y_column]
+        X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                            test_size=0.3,
+                                                            random_state=random_state,
+                                                            )
 
-            linear(X_train, y_train, X_test, y_test)
-            polynomial(X_train, y_train, X_test, y_test)
-            bayesian(X_train, y_train, X_test, y_test)
-            svm(X_train, y_train, X_test, y_test)
-            decision_tree(X_train, y_train, X_test, y_test, x_columns)
+        linear(X_train, y_train, X_test, y_test)
+        polynomial(X_train, y_train, X_test, y_test)
+        bayesian(X_train, y_train, X_test, y_test)
+        svm(X_train, y_train, X_test, y_test)
+        decision_tree(X_train, y_train, X_test, y_test, x_columns)
+
+        if input("Do You Want To Continue? [y/n]") != "y":
+            break
 
 
 if __name__ == "__main__":
