@@ -122,7 +122,7 @@ def model2(df, x_columns, y_column, state, random_state):
     eval(X_test, y_test_cat)
 
     auswertung = pd.DataFrame.from_dict(historie.history)
-    print("------ Plotin Neural Net Graph --------")
+    print("------ Ploting Neural Net Graph --------")
     fig = plt.figure(figsize=(20, 8), num="Neuronal Net")
     bild1 = fig.add_subplot(121)
     bild1.plot(auswertung.index, auswertung.iloc[:, 0], color='blue')
