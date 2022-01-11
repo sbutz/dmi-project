@@ -118,12 +118,12 @@ def decision_tree(X_train, y_train, X_test, y_test, x_columns):
 
 def main():
     df_red = pd.read_csv('winequality-red-filtered.csv', sep=';', header=0)
-    df_red.name = "dataframe with data of red wine"
+    df_red.name = "Dataframe mit Rotweindaten"
     df_white = pd.read_csv('winequality-white.csv', sep=';', header=0)
-    df_white.name = "dataframe with data of white wine"
+    df_white.name = "Dataframe mit Weißweindaten"
 
     df = df_red.append(df_white, ignore_index=True)
-    df.name = "dataframe with data of red and white wine combined"
+    df.name = "Dataframe mit Daten von Rot- und Weißwein kombiniert"
 
     x_columns = ["fixed acidity", "volatile acidity", "citric acid", "residual sugar", "chlorides",
                  "free sulfur dioxide",
@@ -137,7 +137,7 @@ def main():
     random_state = 2
 
     for df in [df_red, df_white, df]:
-        print("\nAnalyzing", df.name, "...", "\n")
+        print("\nAnalysiere", df.name, "...", "\n")
         scatter(df, x_columns, y_column)
 
         """ Split Datset """
@@ -155,7 +155,7 @@ def main():
         decision_tree(X_train, y_train, X_test, y_test, x_columns)
 
         if df != df:
-            if input("Do You Want To Continue? [y/n]") != "y":
+            if input("Wollen Sie die Analyse fortsetzen? [y/n]") != "y":
                 break
 
 
