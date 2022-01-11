@@ -10,17 +10,6 @@ import graphviz as gv
 import matplotlib.pyplot as plt
 import pandas as pd
 
-""" TODO:
-- df: red vs white wine
-- train_test_split: different random_states
-- train_test_split: limit features (x_columns_2)
-- tree: try different params 
-- use neural networks
-- plot: r2 depending on params?
-- more evaluation numbers beside r2?
-- use scaler?
-"""
-
 """ Scatter matrix """
 
 
@@ -91,7 +80,7 @@ No promising results.
 
 
 def svm(X_train, y_train, X_test, y_test):
-    for kernel in ['rbf', 'linear', 'poly']:
+    for kernel in ['rbf', 'linear', 'poly', 'sigmoid']:
         model = SVR(kernel=kernel, degree=3, max_iter=-1)
         model.fit(X_train, y_train.values.ravel())
 
@@ -107,7 +96,7 @@ Strong Overfitting.
 
 
 def decision_tree(X_train, y_train, X_test, y_test, x_columns):
-    for criterion in ['squared_error', 'absolute_error']:
+    for criterion in ['squared_error', 'friedman_mse', 'absolute_error', 'poisson']:
         model = DecisionTreeRegressor(criterion=criterion,
                                       splitter='best',
                                       max_depth=None,
@@ -122,14 +111,13 @@ def decision_tree(X_train, y_train, X_test, y_test, x_columns):
         print(f'R2 Testdaten: {model.score(X_test, y_test)}')
         print('\n')
 
-    # Only plot last/best tree
     dot = export_graphviz(model, out_file=None, filled=True, feature_names=x_columns)
     graph = gv.Source(dot)
     graph.view()
 
 
 def main():
-    df_red = pd.read_csv('winequality-red.csv', sep=';', header=0)
+    df_red = pd.read_csv('winequality-red-filtered.csv', sep=';', header=0)
     df_red.name = "dataframe with data of red wine"
     df_white = pd.read_csv('winequality-white.csv', sep=';', header=0)
     df_white.name = "dataframe with data of white wine"
@@ -141,8 +129,8 @@ def main():
                  "free sulfur dioxide",
                  "total sulfur dioxide", "density", "pH", "sulphates", "alcohol"]
 
-    x_columns_2 = ["volatile acidity", "residual sugar", "chlorides",
-                   "total sulfur dioxide", "pH", "sulphates", "alcohol"]
+    # x_columns_2 = ["volatile acidity", "residual sugar", "chlorides",
+    #                "total sulfur dioxide", "pH", "sulphates", "alcohol"]
 
     y_column = ["quality"]
 
@@ -151,7 +139,6 @@ def main():
     for df in [df_red, df_white, df]:
         print("\nAnalyzing", df.name, "...", "\n")
         scatter(df, x_columns, y_column)
-        # scatter(df_white, x_columns, y_column)
 
         """ Split Datset """
         X = df[x_columns]
@@ -167,8 +154,9 @@ def main():
         svm(X_train, y_train, X_test, y_test)
         decision_tree(X_train, y_train, X_test, y_test, x_columns)
 
-        if input("Do You Want To Continue? [y/n]") != "y":
-            break
+        if df != df:
+            if input("Do You Want To Continue? [y/n]") != "y":
+                break
 
 
 if __name__ == "__main__":
