@@ -154,9 +154,8 @@ def main():
         svm(X_train, y_train, X_test, y_test)
         decision_tree(X_train, y_train, X_test, y_test, x_columns)
 
-        if df != df:
-            if input("Wollen Sie die Analyse fortsetzen? [y/n]") != "y":
-                break
+        if input("Wollen Sie die Analyse fortsetzen? [y/n]") != "y":
+            break
 
 
 if __name__ == "__main__":
