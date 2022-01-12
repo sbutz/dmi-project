@@ -4,7 +4,6 @@ import pandas as pd
 
 """ KMeans Clustering
 Segments ~80% of elements correctly.
-Predicts red wine better.
 """
 
 
