@@ -96,7 +96,7 @@ Strong Overfitting.
 
 
 def decision_tree(X_train, y_train, X_test, y_test, x_columns):
-    for criterion in ['squared_error', 'friedman_mse', 'absolute_error', 'poisson']:
+    for criterion in ['squared_error', 'absolute_error', 'poisson', 'friedman_mse']:
         model = DecisionTreeRegressor(criterion=criterion,
                                       splitter='best',
                                       max_depth=None,
@@ -111,6 +111,7 @@ def decision_tree(X_train, y_train, X_test, y_test, x_columns):
         print(f'R2 Testdaten: {model.score(X_test, y_test)}')
         print('\n')
 
+    # Plot best tree
     dot = export_graphviz(model, out_file=None, filled=True, feature_names=x_columns)
     graph = gv.Source(dot)
     graph.view()
@@ -154,9 +155,8 @@ def main():
         svm(X_train, y_train, X_test, y_test)
         decision_tree(X_train, y_train, X_test, y_test, x_columns)
 
-        if df != df:
-            if input("Wollen Sie die Analyse fortsetzen? [y/n]") != "y":
-                break
+        if input("Wollen Sie die Analyse fortsetzen? [y/n]") != "y":
+            break
 
 
 if __name__ == "__main__":
