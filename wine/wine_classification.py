@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from re import L
-import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, export_graphviz
+import graphviz as gv
 import numpy as np
+import pandas as pd
 
 
 """" Naive Bayes (Gauss)
@@ -142,18 +142,22 @@ def tree_categories(df, x_columns, y_column, random_state, state):
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    knc = DecisionTreeClassifier(
-        criterion='gini',
+    model = DecisionTreeClassifier(
+        criterion='entropy',
         splitter='best',
-        min_samples_split=0.05,
+        min_samples_split=0.10,
         random_state=random_state,
     )
 
-    knc.fit(X_train, y_train.values.ravel())
+    model.fit(X_train, y_train.values.ravel())
     print('Accuracy of decision tree classifier on training set: {:.2f}'
-          .format(knc.score(X_train, y_train.values.ravel())))
+          .format(model.score(X_train, y_train.values.ravel())))
     print('Accuracy of decision tree classifier on test set: {:.2f}'
-          .format(knc.score(X_test, y_test.values.ravel())))
+          .format(model.score(X_test, y_test.values.ravel())))
+
+    dot = export_graphviz(model, out_file=None, filled=True, feature_names=x_columns)
+    graph = gv.Source(dot)
+    graph.view()
 
 
 def main():
