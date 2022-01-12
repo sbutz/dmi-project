@@ -162,7 +162,7 @@ def tree_categories(df, x_columns, y_column, random_state, state):
 
 def main():
     df_red = pd.read_csv('winequality-red-filtered.csv', sep=';', header=0)
-    df_white = pd.read_csv('winequality-white.csv', sep=';', header=0)
+    df_white = pd.read_csv('winequality-white-filtered.csv', sep=';', header=0)
 
     df_red['color'] = 0
     df_white['color'] = 1

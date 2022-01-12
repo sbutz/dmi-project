@@ -120,7 +120,7 @@ def decision_tree(X_train, y_train, X_test, y_test, x_columns):
 def main():
     df_red = pd.read_csv('winequality-red-filtered.csv', sep=';', header=0)
     df_red.name = "Dataframe mit Rotweindaten"
-    df_white = pd.read_csv('winequality-white.csv', sep=';', header=0)
+    df_white = pd.read_csv('winequality-white-filtered.csv', sep=';', header=0)
     df_white.name = "Dataframe mit Weißweindaten"
 
     df = df_red.append(df_white, ignore_index=True)
