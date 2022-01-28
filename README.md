@@ -1,3 +1,3 @@
 # dmi-project
 
-Studienprojekt für den Kurs Data-Mining der OTH Regensburg.
+Project for the course data mining at OTH.
